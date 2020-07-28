@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
 const socketio = require('socket.io');
-const http  = require('http');
+const http = require('http');
 const routes = require('./routes/routes');
 
 const app = express();
@@ -12,18 +12,20 @@ const io = socketio(server);
 
 const connectedUsers = {};
 
-mongoose.connect('mongodb://omnistack:omnistack123@ds229078.mlab.com:29078/aircnc',{
+const urlMongo = 'mongodb://<DB_USER>:<DB_PASS>@<DB_HOST>';
+
+mongoose.connect(urlMongo, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
 
 
-io.on('connection', socket=>{
+io.on('connection', socket => {
     const { user_id } = socket.handshake.query;
     connectedUsers[user_id] = socket.id;
 })
 
-app.use((req, res, next)=>{
+app.use((req, res, next) => {
     req.io = io;
     req.connectedUsers = connectedUsers;
 
